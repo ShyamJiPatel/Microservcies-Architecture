@@ -1,0 +1,66 @@
+package com.shyam.api.productservice.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shyam.commonlib.entity.BaseEntity;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Entity
+@Table(name = "images")
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class Image extends BaseEntity {
+
+	@Column(name = "created_name")
+	private String createdName;
+
+	@Column(name = "original_name")
+	private String originalName;
+
+	@Column(name = "extension")
+	private String extension;
+
+	@Column(name = "size")
+	private String size;
+
+	@Column(name = "other")
+	private String other;
+
+	@Column(name = "content_type")
+	private String contentType;
+
+	@Column(name = "type")
+	private String type;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Product product;
+
+	@Transient
+	private transient String url;
+
+	public Image() {
+
+	}
+
+	public Image(String createdName, String originalName, String extension, String contentType) {
+		this.createdName = createdName;
+		this.originalName = originalName;
+		this.extension = extension;
+		this.contentType = contentType;
+	}
+}
