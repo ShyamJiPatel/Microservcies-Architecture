@@ -1,0 +1,9 @@
+# Configure Eureka Server
+eureka:
+  client:
+    registerWithEureka: false # Not a client, Don't register with yourself
+    fetchRegistry: false
+    
+# HTTP Server
+server:
+  port: 8761
