@@ -1,0 +1,8 @@
+# Message used in application
+app:
+  message: 
+    resource-not-found: 'Resource not found'
+    user-not-found: 'User not found'
+    image-not-found: 'Image not found'
+    address-not-found: 'Address not found'
+    
