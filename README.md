@@ -1,4 +1,4 @@
-# Microservcies-Architecture
+# Microservices-Architecture
 Microservices architecture with Spring Boot and Spring Cloud technologies
 
 This repository is related to microservices architecture using spring boot and cloud technologies. Below microservices are related to e-commerce with very neat and clean architecture:
