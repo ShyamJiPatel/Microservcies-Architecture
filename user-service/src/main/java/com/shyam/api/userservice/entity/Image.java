@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shyam.commonlib.entity.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

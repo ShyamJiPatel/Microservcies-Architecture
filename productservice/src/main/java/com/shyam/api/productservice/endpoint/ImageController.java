@@ -1,5 +1,7 @@
 package com.shyam.api.productservice.endpoint;
 
+import java.util.List;
+
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +27,19 @@ public class ImageController {
 	@Autowired
 	private ImageService imageService;
 
-	@PostMapping(value = "/products/{userId}/images", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> saveUpdate(@PathVariable Long userId,
+	@PostMapping(value = "/products/{productId}/images", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> saveUpdate(@PathVariable Long productId,
 			@RequestParam("file") MultipartFile file) {
 
-		Image dbImage = imageService.saveUpdate(userId, file);
+		Image dbImage = imageService.saveUpdate(productId, file);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(new CustomResponse(dbImage));
 	}
 
-	@GetMapping(value = "/products/{userId}/images/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> findById(@PathVariable Long userId, @PathVariable Long id) {
+	@GetMapping(value = "/products/{productId}/images/{id}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> findById(@PathVariable Long productId, @PathVariable Long id) {
 
-		Image dbImage = imageService.findById(userId, id);
+		Image dbImage = imageService.findById(productId, id);
 
 		if (dbImage != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(dbImage));
@@ -46,30 +48,30 @@ public class ImageController {
 		}
 	}
 
-	@GetMapping(value = "/products/{userId}/images", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> findByUserId(@PathVariable Long userId) {
+	@GetMapping(value = "/products/{productId}/images", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> findByProductId(@PathVariable Long productId) {
 
-		Image image = imageService.findByProductId(userId);
+		List<Image> images = imageService.findByProductId(productId);
 
-		if (image != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(image));
+		if (images != null) {
+			return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(images));
 		} else {
 			throw new ResourceNotFoundException(AppMessage.IMAGE_NOT_FOUND);
 		}
 	}
 
-	@PostMapping(value = "/products/{userId}/images/archive/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> archiveById(@PathVariable Long userId, @PathVariable Long id) {
+	@PostMapping(value = "/products/{productId}/images/archive/{id}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> archiveById(@PathVariable Long productId, @PathVariable Long id) {
 
-		imageService.archiveById(userId, id);
+		imageService.archiveById(productId, id);
 
 		return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse());
 	}
 
-	@DeleteMapping(value = "/products/{userId}/images/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> deleteById(@PathVariable Long userId, @PathVariable Long id) {
+	@DeleteMapping(value = "/products/{productId}/images/{id}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> deleteById(@PathVariable Long productId, @PathVariable Long id) {
 
-		imageService.deleteById(userId, id);
+		imageService.deleteById(productId, id);
 
 		return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse());
 	}

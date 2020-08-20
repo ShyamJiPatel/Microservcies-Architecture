@@ -10,17 +10,23 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shyam.api.userservice.dao.ImageDao;
 import com.shyam.api.userservice.dao.RoleDao;
 import com.shyam.api.userservice.dao.UserDao;
+import com.shyam.api.userservice.entity.Image;
 import com.shyam.api.userservice.entity.Role;
 import com.shyam.api.userservice.entity.UserDetails;
 import com.shyam.api.userservice.service.UserService;
+import com.shyam.commonlib.util.FileStorageUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private ImageDao imageDao;
 
 	@Autowired
 	private RoleDao roleRipository;
@@ -52,13 +58,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long id) {
 		userDao.deleteById(id);
+		deleteImages(id);
 	}
 
 	@Override
 	@Transactional
 	public void archiveById(Long id) {
 		userDao.archiveById(id);
+	}
+
+	private void deleteImages(Long id) {
+		Image image = imageDao.findByUserId(id);
+		if (image != null) {
+			FileStorageUtil.delete(image.getCreatedName() + image.getExtension());
+		}
 	}
 }

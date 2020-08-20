@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shyam.api.userservice.entity.CustomResponse;
 import com.shyam.api.userservice.entity.UserVerificationStatus;
 import com.shyam.api.userservice.service.UserVerificationService;
+import com.shyam.commonlib.entity.CustomResponse;
 
 @RestController
 public class UserVerificationController {

@@ -2,6 +2,8 @@ package com.shyam.api.userservice.service.impl;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -86,26 +88,51 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public Image findById(Long userId, Long id) {
-		return imageDao.findById(userId, id);
+		try {
+			Image dbImage = imageDao.findById(userId, id);
+			Resource savedFile = FileStorageUtil.load(dbImage.getCreatedName() + dbImage.getExtension());
+			dbImage.setUrl(savedFile.getURI().toString());
+			return dbImage;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Image findByFileName(Long userId, String fileName) {
-		return imageDao.findByFileName(userId, fileName);
+		try {
+			Image dbImage = imageDao.findByFileName(userId, fileName);
+			Resource savedFile = FileStorageUtil.load(dbImage.getCreatedName() + dbImage.getExtension());
+			dbImage.setUrl(savedFile.getURI().toString());
+			return dbImage;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Image findByUserId(Long userId) {
-		return imageDao.findByUserId(userId);
+		try {
+			Image dbImage = imageDao.findByUserId(userId);
+			Resource savedFile = FileStorageUtil.load(dbImage.getCreatedName() + dbImage.getExtension());
+			dbImage.setUrl(savedFile.getURI().toString());
+			return dbImage;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	@Override
+	@Transactional
 	public void archiveById(Long userId, Long id) {
 		imageDao.archiveById(userId, id);
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long userId, Long id) {
+		Image dbImage = imageDao.findByUserId(userId);
 		imageDao.deleteById(userId, id);
+		FileStorageUtil.delete(dbImage.getCreatedName() + dbImage.getExtension());
 	}
 }

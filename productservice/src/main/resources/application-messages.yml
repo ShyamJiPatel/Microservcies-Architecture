@@ -4,7 +4,6 @@ app:
     resource-not-found: 'Resource not found'
     user-not-found: 'User not found'
     image-not-found: 'Image not found'
-    address-not-found: 'Address not found'
     product-not-found: 'Product not found'
     category-not-found: 'Category not found'
     parent-category-not-found: 'Parent Category not found'

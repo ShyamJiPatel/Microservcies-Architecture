@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shyam.api.userservice.entity.Address;
-import com.shyam.api.userservice.entity.CustomResponse;
 import com.shyam.api.userservice.service.AddressService;
+import com.shyam.commonlib.entity.CustomResponse;
 
 @RestController
 public class AddressController {

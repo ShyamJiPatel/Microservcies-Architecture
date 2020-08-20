@@ -9,6 +9,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.shyam.commonlib.entity.BaseEntity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

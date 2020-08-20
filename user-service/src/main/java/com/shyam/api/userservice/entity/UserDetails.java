@@ -14,6 +14,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.shyam.commonlib.entity.BaseEntity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

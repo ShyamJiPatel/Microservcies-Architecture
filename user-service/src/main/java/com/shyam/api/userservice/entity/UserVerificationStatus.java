@@ -15,6 +15,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.shyam.api.userservice.enums.UserVerificationType;
+import com.shyam.commonlib.entity.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,7 +40,7 @@ public class UserVerificationStatus extends BaseEntity {
 
 	@Column(name = "verified")
 	private Boolean verified;
-	
+
 	@Column(name = "verified_on")
 	private LocalDateTime verifiedOn;
 

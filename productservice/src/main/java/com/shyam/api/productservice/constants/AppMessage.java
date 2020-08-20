@@ -14,7 +14,6 @@ public class AppMessage {
 	public static String RESOURCE_NOT_FOUND;
 	public static String USER_NOT_FOUND;
 	public static String IMAGE_NOT_FOUND;
-	public static String ADDRESS_NOT_FOUND;
 	public static String PRODUCT_NOT_FOUND;
 	public static String CATEGORY_NOT_FOUND;
 	public static String PARENT_CATEGORY_NOT_FOUND;
@@ -32,11 +31,6 @@ public class AppMessage {
 	@Value("${app.message.image-not-found}")
 	public void setImageNotFound(String message) {
 		AppMessage.IMAGE_NOT_FOUND = message;
-	}
-
-	@Value("${app.message.address-not-found}")
-	public void setAddressNotFound(String message) {
-		AppMessage.ADDRESS_NOT_FOUND = message;
 	}
 
 	@Value("${app.message.product-not-found}")
@@ -59,7 +53,6 @@ public class AppMessage {
 		log.info("RESOURCE_NOT_FOUND: " + RESOURCE_NOT_FOUND);
 		log.info("USER_NOT_FOUND: " + USER_NOT_FOUND);
 		log.info("IMAGE_NOT_FOUND: " + IMAGE_NOT_FOUND);
-		log.info("ADDRESS_NOT_FOUND: " + ADDRESS_NOT_FOUND);
 		log.info("PRODUCT_NOT_FOUND: " + PRODUCT_NOT_FOUND);
 		log.info("CATEGORY_NOT_FOUND: " + CATEGORY_NOT_FOUND);
 		log.info("PARENT_CATEGORY_NOT_FOUND: " + PARENT_CATEGORY_NOT_FOUND);

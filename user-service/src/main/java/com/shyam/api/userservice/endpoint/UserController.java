@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shyam.api.userservice.constants.AppMessage;
-import com.shyam.api.userservice.entity.CustomResponse;
 import com.shyam.api.userservice.entity.UserDetails;
 import com.shyam.api.userservice.service.UserService;
+import com.shyam.commonlib.entity.CustomResponse;
 import com.shyam.commonlib.exception.UserNotFoundException;
 
 @RestController

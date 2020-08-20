@@ -1,5 +1,6 @@
 package com.shyam.api.productservice.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,7 +43,7 @@ public class Product extends BaseEntity {
 	private String description;
 
 	@Column(name = "price")
-	private Double price;
+	private BigDecimal price;
 
 	@Column(name = "quantity")
 	private Integer quantity;
@@ -61,7 +62,7 @@ public class Product extends BaseEntity {
 
 	@ManyToOne(cascade = { CascadeType.DETACH }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id")
-	private Category catogory;
+	private Category category;
 
 	@Transient
 	private List<Image> products;

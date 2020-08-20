@@ -38,6 +38,8 @@ zuul:
       serviceId: product-service
       stripPrefix: true
   ignoredServices: '*'
+  sensitive-headers: 
+#  prefix: /ms
   host:
     time-to-live: -1
     connect-timeout-millis: 5000

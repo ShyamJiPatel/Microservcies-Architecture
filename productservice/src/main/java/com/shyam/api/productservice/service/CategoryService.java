@@ -16,11 +16,11 @@ public interface CategoryService {
 
 	public void archiveById(Long id);
 
-	public Category saveUpdateSubcategory(Long categoryId, Category subcategory);
+	public Category saveUpdateSubcategory(Long parentCategoryId, Category subcategory);
 
-	public Category findById(Long categoryId, Long id);
+	public Category findById(Long parentCategoryId, Long id);
 
-	public List<Category> findAll(Long categoryId);
+	public List<Category> findAll(Long parentCategoryId);
 
 	public void archiveById(Long categoryId, Long id);
 

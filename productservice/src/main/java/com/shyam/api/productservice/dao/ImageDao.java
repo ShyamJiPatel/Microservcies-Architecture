@@ -1,5 +1,7 @@
 package com.shyam.api.productservice.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +17,7 @@ public interface ImageDao extends JpaRepository<Image, Long> {
 	public Image findById(@Param("productId") Long productId, @Param("id") Long id);
 
 	@Query("SELECT i FROM Image i WHERE i.product.id = :productId AND i.archived = false")
-	public Image findByProductId(@Param("productId") Long productId);
+	public List<Image> findByProductId(@Param("productId") Long productId);
 
 	@Modifying
 	@Query("DELETE FROM Image i WHERE i.product.id = :productId AND i.id = :id")

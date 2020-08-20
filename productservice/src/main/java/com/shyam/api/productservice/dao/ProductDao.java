@@ -14,13 +14,17 @@ import com.shyam.api.productservice.entity.Product;
 @Repository
 public interface ProductDao extends JpaRepository<Product, Long> {
 
-	@Query("SELECT p FROM Product p WHERE p.id = :id AND p.archived = false")
-	public Optional<Product> findById(@Param("id") Long id);
+	@Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.id = :id AND p.archived = false")
+	public Optional<Product> findById(@Param("categoryId") Long categoryId, @Param("id") Long id);
 
-	@Query("SELECT p FROM Product p WHERE p.archived = false")
-	public List<Product> findAll();
+	@Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.archived = false")
+	public List<Product> findAll(@Param("categoryId") Long categoryId);
 
-	@Query("UPDATE Product p SET p.archived = true WHERE p.id = :id")
+	@Query("UPDATE Product p SET p.archived = true WHERE p.category.id = :categoryId AND p.id = :id")
 	@Modifying
-	public void archiveById(Long id);
+	public void archiveById(@Param("categoryId") Long categoryId, Long id);
+
+	@Modifying
+	@Query("DELETE FROM Product p WHERE p.category.id = :categoryId AND p.id = :id")
+	public void deleteById(@Param("categoryId") Long categoryId, @Param("id") Long id);
 }

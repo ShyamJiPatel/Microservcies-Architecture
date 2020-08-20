@@ -6,13 +6,16 @@ import java.util.Optional;
 import com.shyam.api.productservice.entity.Product;
 
 public interface ProductService {
-	public Product saveUpdate(Product user);
+
+	public Product saveUpdate(Long categoryId, Product product);
+
+	public Optional<Product> findById(Long categoryId, Long id);
+
+	public List<Product> findAll(Long categoryId);
+
+	public void deleteById(Long categoryId, Long id);
+
+	public void archiveById(Long categoryId, Long id);
 
 	public Optional<Product> findById(Long id);
-
-	public List<Product> findAll();
-
-	public void deleteById(Long id);
-
-	public void archiveById(Long id);
 }
