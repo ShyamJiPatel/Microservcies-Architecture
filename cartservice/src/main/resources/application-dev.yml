@@ -45,4 +45,13 @@ logging:
   path: D:/Workspaces/Microservices Practices/logs
   file:
     name: ${logging.path}/cartservice.log
+
+# Feign Client 
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: info
     

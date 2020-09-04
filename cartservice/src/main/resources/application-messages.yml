@@ -3,6 +3,8 @@ app:
   message: 
     resource-not-found: 'Resource not found'
     user-not-found: 'User not found'
+    user-not-activated: 'User not activated'
     address-not-found: 'Address not found'
     product-not-found: 'Product not found'
+    cart-not-found: 'Cart not found'
     

@@ -13,7 +13,9 @@ public class AppMessage {
 
 	public static String RESOURCE_NOT_FOUND;
 	public static String USER_NOT_FOUND;
+	public static String USER_NOT_ACTIVATED;
 	public static String PRODUCT_NOT_FOUND;
+	public static String CART_NOT_FOUND;
 
 	@Value("${app.message.resource-not-found}")
 	public void setResoureNotFound(String message) {
@@ -25,15 +27,26 @@ public class AppMessage {
 		AppMessage.USER_NOT_FOUND = message;
 	}
 
+	@Value("${app.message.user-not-activated}")
+	public void setUserNotActivated(String message) {
+		AppMessage.USER_NOT_ACTIVATED = message;
+	}
+
 	@Value("${app.message.product-not-found}")
 	public void setProductNotFound(String message) {
 		AppMessage.PRODUCT_NOT_FOUND = message;
+	}
+
+	@Value("${app.message.cart-not-found}")
+	public void setCartNotFound(String message) {
+		AppMessage.CART_NOT_FOUND = message;
 	}
 
 	@PostConstruct
 	public void print() {
 		log.info("RESOURCE_NOT_FOUND: " + RESOURCE_NOT_FOUND);
 		log.info("USER_NOT_FOUND: " + USER_NOT_FOUND);
+		log.info("USER_NOT_ACTIVATED: " + USER_NOT_ACTIVATED);
 		log.info("PRODUCT_NOT_FOUND: " + PRODUCT_NOT_FOUND);
 	}
 }

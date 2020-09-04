@@ -2,12 +2,10 @@ package com.shyam.api.cartservice.entity;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.shyam.commonlib.entity.BaseEntity;
 
@@ -19,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "cart_items")
 @Entity
 public class CartItem extends BaseEntity {
-	
+
 	@Column(name = "subtotal")
 	private BigDecimal subtotal;
 
@@ -29,10 +27,23 @@ public class CartItem extends BaseEntity {
 	@Column(name = "discount")
 	private BigDecimal discount;
 
+	@Column(name = "product_id", nullable = false)
+	private Long productId;
+
 	@Column(name = "tax")
 	private BigDecimal tax;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "product_id")
+	@Transient
 	private Product product;
+
+	public CartItem() {
+
+	}
+
+	public CartItem(Product product, Integer quantity, BigDecimal subtotal) {
+		this.product = product;
+		this.productId = product.getId();
+		this.quantity = quantity;
+		this.subtotal = subtotal;
+	}
 }
