@@ -2,6 +2,8 @@ package com.shyam.api.cartservice.endpoints;
 
 import java.util.Optional;
 
+import javax.ws.rs.core.MediaType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +24,8 @@ public class CartController {
 	@Autowired
 	private CartService cartService;
 
-	@GetMapping(path = "/cart/{userId}")
-	public ResponseEntity<CustomResponse> getCart(@PathVariable Long userId, @PathVariable Long cartId) {
+	@GetMapping(value = "/cart/{userId}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> getCart(@PathVariable Long userId) {
 		Optional<Cart> cart = cartService.getCart(userId);
 
 		if (cart.isPresent()) {
@@ -33,7 +35,7 @@ public class CartController {
 		}
 	}
 
-	@PostMapping(path = "/cart/{userId}/{productId}/{quantity}")
+	@PostMapping(value = "/cart/{userId}/{productId}/{quantity}", produces = { MediaType.APPLICATION_JSON })
 	public ResponseEntity<CustomResponse> addItemToCart(@PathVariable Long userId, @PathVariable Long productId,
 			@PathVariable Integer quantity) {
 		cartService.addItemToCart(userId, productId, quantity);

@@ -18,6 +18,7 @@ import com.shyam.api.cartservice.feignclient.ProductClient;
 import com.shyam.api.cartservice.feignclient.UserClient;
 import com.shyam.api.cartservice.service.CartService;
 import com.shyam.api.cartservice.utilities.CartUtilities;
+import com.shyam.commonlib.entity.CustomResponse;
 import com.shyam.commonlib.exception.ResourceNotFoundException;
 
 @Service
@@ -39,12 +40,17 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public Cart createCart(Long userId) {
-		UserDetails user = userClient.findById(userId);
+		CustomResponse userResponse = userClient.findById(userId);
 
-		if (user == null) {
-			throw new ResourceNotFoundException(AppMessage.USER_NOT_FOUND);
-		} else if (user.getActive() == null || user.getActive() == 0) {
-			throw new ResourceNotFoundException(AppMessage.USER_NOT_FOUND);
+		if (userResponse.getSuccess()) {
+			UserDetails user = (UserDetails) userResponse.getData();
+			if (user == null) {
+				throw new ResourceNotFoundException(AppMessage.USER_NOT_FOUND);
+			} else if (user.getActive() == null || user.getActive() == 0) {
+				throw new ResourceNotFoundException(AppMessage.USER_NOT_ACTIVATED);
+			}
+		} else {
+			throw new RuntimeException(userResponse.getMessage());
 		}
 
 		Cart cart = new Cart(userId);
@@ -79,14 +85,18 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public void addItemToCart(Cart cart, Long productId, Integer quantity) {
-		Product product = productClient.findById(productId);
+		CustomResponse productResponse = productClient.findById(productId);
 
-		if (product == null) {
-			throw new ResourceNotFoundException(AppMessage.PRODUCT_NOT_FOUND);
+		if (productResponse.getSuccess()) {
+			Product product = (Product) productResponse.getData();
+			if (product == null) {
+				throw new ResourceNotFoundException(AppMessage.PRODUCT_NOT_FOUND);
+			}
+			CartItem cartItem = new CartItem(product, quantity, CartUtilities.getSubTotalForItem(product, quantity));
+			cart.getItems().add(cartItem);
+		} else {
+			throw new RuntimeException(productResponse.getMessage());
 		}
-
-		CartItem cartItem = new CartItem(product, quantity, CartUtilities.getSubTotalForItem(product, quantity));
-		cart.getItems().add(cartItem);
 	}
 
 	@Override

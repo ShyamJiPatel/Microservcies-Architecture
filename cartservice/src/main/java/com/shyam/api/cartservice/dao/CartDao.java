@@ -12,6 +12,6 @@ import com.shyam.api.cartservice.entity.Cart;
 @Repository
 public interface CartDao extends JpaRepository<Cart, Long> {
 
-	@Query("SELECT c FROM Cart c WHERE c.user.id = :userId AND c.archived = false")
+	@Query("SELECT c FROM Cart c WHERE c.userId = :userId AND c.archived = false")
 	public Optional<Cart> findByUserId(@Param("userId") Long userId);
 }
