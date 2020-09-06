@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableEurekaClient
 @EnableJpaRepositories
 @Slf4j
-@ComponentScan(basePackages = { "com.shyam.api.productservice", "com.shyam.commonlib" })
+@ComponentScan(basePackages = { "com.shyam.api.userservice", "com.shyam.commonlib" })
 public class UserServiceApplication {
 
 	public static void main(String[] args) {

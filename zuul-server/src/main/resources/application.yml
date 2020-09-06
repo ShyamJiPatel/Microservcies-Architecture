@@ -28,6 +28,7 @@ server:
   
 # Microservices Paths
 zuul:
+  ignoredServices: '*'
   routes:
     user-service: 
       path: /user-service/**
@@ -37,8 +38,11 @@ zuul:
       path: /product-service/**
       serviceId: product-service
       stripPrefix: true
-  ignoredServices: '*'
-  sensitive-headers: 
+    cart-service: 
+      path: /cart-service/**
+      serviceId: cart-service
+      stripPrefix: true
+#  sensitive-headers: 
 #  prefix: /ms
   host:
     time-to-live: -1

@@ -29,7 +29,7 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
-	@PostMapping(value = "/categories/{categoryId}/products", produces = { MediaType.APPLICATION_JSON })
+	@PostMapping(value = "/products/{categoryId}", produces = { MediaType.APPLICATION_JSON })
 	public ResponseEntity<CustomResponse> saveUpdate(@PathVariable Long categoryId,
 			@Valid @RequestBody Product product) {
 
@@ -38,8 +38,8 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(new CustomResponse(dbProduct));
 	}
 
-	@GetMapping(value = "/categories/{categoryId}/products/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> findById(@PathVariable Long categoryId, @PathVariable Long id) {
+	@GetMapping(value = "/products/{id}/{categoryId}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> findById(@PathVariable Long id, @PathVariable Long categoryId) {
 
 		Optional<Product> product = productService.findById(categoryId, id);
 
@@ -50,7 +50,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping(value = "/categories/{categoryId}/products", produces = { MediaType.APPLICATION_JSON })
+	@GetMapping(value = "/products/{categoryId}", produces = { MediaType.APPLICATION_JSON })
 	public ResponseEntity<CustomResponse> findAll(@PathVariable Long categoryId) {
 
 		List<Product> allProduct = productService.findAll(categoryId);
@@ -62,19 +62,31 @@ public class ProductController {
 		}
 	}
 
-	@PostMapping(value = "/categories/{categoryId}/products/archive/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> archiveById(@PathVariable Long categoryId, @PathVariable Long id) {
+	@PostMapping(value = "/products/archive/{id}/{categoryId}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> archiveById(@PathVariable Long id, @PathVariable Long categoryId) {
 
 		productService.archiveById(categoryId, id);
 
 		return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse());
 	}
 
-	@DeleteMapping(value = "/categories/{categoryId}/products/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<CustomResponse> deleteById(@PathVariable Long categoryId, @PathVariable Long id) {
+	@DeleteMapping(value = "/products/{id}/{categoryId}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> deleteById(@PathVariable Long id, @PathVariable Long categoryId) {
 
 		productService.deleteById(categoryId, id);
 
 		return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse());
+	}
+
+	@GetMapping(value = "/products/{id}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> findProductById(@PathVariable Long id) {
+
+		Optional<Product> product = productService.findById(id);
+
+		if (product.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(product.get()));
+		} else {
+			throw new ResourceNotFoundException(AppMessage.PRODUCT_NOT_FOUND);
+		}
 	}
 }

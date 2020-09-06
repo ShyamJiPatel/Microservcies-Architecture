@@ -20,6 +20,7 @@ import com.shyam.api.cartservice.service.CartService;
 import com.shyam.api.cartservice.utilities.CartUtilities;
 import com.shyam.commonlib.entity.CustomResponse;
 import com.shyam.commonlib.exception.ResourceNotFoundException;
+import com.shyam.commonlib.util.CommonUtil;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -43,7 +44,8 @@ public class CartServiceImpl implements CartService {
 		CustomResponse userResponse = userClient.findById(userId);
 
 		if (userResponse.getSuccess()) {
-			UserDetails user = (UserDetails) userResponse.getData();
+			UserDetails user = CommonUtil.getObjectFromLinkedHashMap(UserDetails.class, userResponse.getData());
+
 			if (user == null) {
 				throw new ResourceNotFoundException(AppMessage.USER_NOT_FOUND);
 			} else if (user.getActive() == null || user.getActive() == 0) {
@@ -88,7 +90,7 @@ public class CartServiceImpl implements CartService {
 		CustomResponse productResponse = productClient.findById(productId);
 
 		if (productResponse.getSuccess()) {
-			Product product = (Product) productResponse.getData();
+			Product product = CommonUtil.getObjectFromLinkedHashMap(Product.class, productResponse.getData());
 			if (product == null) {
 				throw new ResourceNotFoundException(AppMessage.PRODUCT_NOT_FOUND);
 			}
