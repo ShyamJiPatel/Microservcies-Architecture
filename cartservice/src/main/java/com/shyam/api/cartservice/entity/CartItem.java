@@ -19,19 +19,22 @@ import lombok.EqualsAndHashCode;
 public class CartItem extends BaseEntity {
 
 	@Column(name = "subtotal")
-	private BigDecimal subtotal;
+	private BigDecimal subtotal = new BigDecimal(0);;
 
 	@Column(name = "quantity")
-	private Integer quantity;
+	private Integer quantity = 0;
 
 	@Column(name = "discount")
-	private BigDecimal discount;
+	private BigDecimal discount = new BigDecimal(0);;
+
+	@Column(name = "tax")
+	private BigDecimal tax = new BigDecimal(0);
+
+	@Column(name = "delivery_charges")
+	private BigDecimal deliveryCharges = new BigDecimal(0);
 
 	@Column(name = "product_id", nullable = false)
 	private Long productId;
-
-	@Column(name = "tax")
-	private BigDecimal tax;
 
 	@Transient
 	private Product product;

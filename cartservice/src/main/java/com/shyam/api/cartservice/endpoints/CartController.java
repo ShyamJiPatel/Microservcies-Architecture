@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,11 +36,23 @@ public class CartController {
 		}
 	}
 
-	@PostMapping(value = "/cart/{userId}/{productId}/{quantity}", produces = { MediaType.APPLICATION_JSON })
+	@PostMapping(value = "/cart/items/{userId}/{productId}/{quantity}", produces = { MediaType.APPLICATION_JSON })
 	public ResponseEntity<CustomResponse> addItemToCart(@PathVariable Long userId, @PathVariable Long productId,
 			@PathVariable Integer quantity) {
 		cartService.addItemToCart(userId, productId, quantity);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new CustomResponse());
+	}
+
+	@DeleteMapping(value = "/cart/items/{userId}/{productId}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> removeItemFromCart(@PathVariable Long userId, @PathVariable Long productId) {
+		cartService.removeItemFromCart(userId, productId);
+		return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse());
+	}
+
+	@DeleteMapping(value = "/cart/{userId}", produces = { MediaType.APPLICATION_JSON })
+	public ResponseEntity<CustomResponse> deleteCart(@PathVariable Long userId) {
+		cartService.deleteCart(userId);
+		return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse());
 	}
 
 }

@@ -15,6 +15,7 @@ public class AppMessage {
 	public static String USER_NOT_FOUND;
 	public static String USER_NOT_ACTIVATED;
 	public static String PRODUCT_NOT_FOUND;
+	public static String PRODUCT_NOT_FOUND_IN_CART;
 	public static String CART_NOT_FOUND;
 
 	@Value("${app.message.resource-not-found}")
@@ -30,6 +31,11 @@ public class AppMessage {
 	@Value("${app.message.user-not-activated}")
 	public void setUserNotActivated(String message) {
 		AppMessage.USER_NOT_ACTIVATED = message;
+	}
+
+	@Value("${app.message.product-not-found-in-cart}")
+	public void setProductNotFoundInCart(String message) {
+		AppMessage.PRODUCT_NOT_FOUND_IN_CART = message;
 	}
 
 	@Value("${app.message.product-not-found}")
@@ -48,5 +54,6 @@ public class AppMessage {
 		log.info("USER_NOT_FOUND: " + USER_NOT_FOUND);
 		log.info("USER_NOT_ACTIVATED: " + USER_NOT_ACTIVATED);
 		log.info("PRODUCT_NOT_FOUND: " + PRODUCT_NOT_FOUND);
+		log.info("PRODUCT_NOT_FOUND_IN_CART: " + PRODUCT_NOT_FOUND_IN_CART);
 	}
 }

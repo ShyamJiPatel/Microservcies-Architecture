@@ -1,15 +1,14 @@
 package com.shyam.api.cartservice.entity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.shyam.commonlib.entity.BaseEntity;
@@ -23,35 +22,35 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Cart extends BaseEntity {
 
-	@Column(name = "amount")
-	private BigDecimal amount;
+	@Column(name = "subtotal")
+	private BigDecimal subtotal = new BigDecimal(0);
 
 	@Column(name = "discount")
-	private BigDecimal discount;
+	private BigDecimal discount = new BigDecimal(0);
 
 	@Column(name = "tax")
-	private BigDecimal tax;
+	private BigDecimal tax = new BigDecimal(0);
 
 	@Column(name = "total")
-	private BigDecimal total;
+	private BigDecimal total = new BigDecimal(0);
 
 	@Column(name = "delivery_charges")
-	private BigDecimal delivery_charges;
+	private BigDecimal deliveryCharges = new BigDecimal(0);
 
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "cart_cart_items", joinColumns = @JoinColumn(name = "cart_id"), inverseJoinColumns = @JoinColumn(name = "cart_item_id"))
-	private List<CartItem> items;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cart_id")
+	private Set<CartItem> items;
 
 	public Cart() {
-		this.items = new ArrayList<CartItem>();
+		this.items = new HashSet<CartItem>();
 	}
 
 	public Cart(Long userId) {
 		this.userId = userId;
-		this.items = new ArrayList<CartItem>();
+		this.items = new HashSet<CartItem>();
 	}
 
 }

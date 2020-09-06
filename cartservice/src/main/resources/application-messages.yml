@@ -6,5 +6,6 @@ app:
     user-not-activated: 'User not activated'
     address-not-found: 'Address not found'
     product-not-found: 'Product not found'
+    product-not-found-in-cart: 'Product not found in Cart'
     cart-not-found: 'Cart not found'
     

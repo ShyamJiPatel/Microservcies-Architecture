@@ -1,7 +1,9 @@
 package com.shyam.api.cartservice.service.impl;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -41,37 +43,25 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public Cart createCart(Long userId) {
-		CustomResponse userResponse = userClient.findById(userId);
-
-		if (userResponse.getSuccess()) {
-			UserDetails user = CommonUtil.getObjectFromLinkedHashMap(UserDetails.class, userResponse.getData());
-
-			if (user == null) {
-				throw new ResourceNotFoundException(AppMessage.USER_NOT_FOUND);
-			} else if (user.getActive() == null || user.getActive() == 0) {
-				throw new ResourceNotFoundException(AppMessage.USER_NOT_ACTIVATED);
-			}
-		} else {
-			throw new RuntimeException(userResponse.getMessage());
+		UserDetails user = getUser(userId);
+		if (user.getActive() == null || user.getActive() == 0) {
+			throw new ResourceNotFoundException(AppMessage.USER_NOT_ACTIVATED);
 		}
 
 		Cart cart = new Cart(userId);
 		return cartDao.save(cart);
 	}
+	
+	@Override
+	public void deleteCart(Long userId) {
+		cartDao.deleteByUserId(userId);
+	}
 
 	@Transactional
 	@Override
 	public void addItemToCart(Long userId, Long productId, Integer quantity) {
-		Optional<Cart> dbCart = getCart(userId);
-
-		Cart cart = null;
-		if (dbCart.isPresent()) {
-			cart = dbCart.get();
-		} else {
-			cart = createCart(userId);
-		}
-
-		List<CartItem> cartItems = cart.getItems();
+		Cart cart = getOrCreateCart(userId);
+		Set<CartItem> cartItems = cart.getItems();
 		if (cartItems == null || cartItems.size() == 0) {
 			addItemToCart(cart, productId, quantity);
 		} else {
@@ -87,38 +77,135 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public void addItemToCart(Cart cart, Long productId, Integer quantity) {
-		CustomResponse productResponse = productClient.findById(productId);
-
-		if (productResponse.getSuccess()) {
-			Product product = CommonUtil.getObjectFromLinkedHashMap(Product.class, productResponse.getData());
-			if (product == null) {
-				throw new ResourceNotFoundException(AppMessage.PRODUCT_NOT_FOUND);
-			}
-			CartItem cartItem = new CartItem(product, quantity, CartUtilities.getSubTotalForItem(product, quantity));
-			cart.getItems().add(cartItem);
-		} else {
-			throw new RuntimeException(productResponse.getMessage());
-		}
+		Product product = getProduct(productId);
+		CartItem cartItem = new CartItem(product, quantity, CartUtilities.getSubTotalForItem(product, quantity));
+		cart.getItems().add(cartItem);
+		calculateCartTotal(cart);
 	}
 
 	@Override
 	public void changeItemQuantity(Cart cart, Long productId, Integer quantity) {
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductId().equals(productId)) {
-				cartItem.setQuantity(cartItem.getQuantity() + quantity);
-				cartItem.setSubtotal(CartUtilities.getSubTotalForItem(cartItem.getProduct(), cartItem.getQuantity()));
+				cartItem.setQuantity(quantity);
+				Product product = cartItem.getProduct() == null ? getProduct(productId) : cartItem.getProduct();
+				cartItem.setProduct(product);
+				cartItem.setSubtotal(CartUtilities.getSubTotalForItem(product, cartItem.getQuantity()));
 			}
 		}
+		calculateCartTotal(cart);
 	}
 
 	@Override
 	public boolean checkIfItemExist(Cart cart, Long productId) {
 		for (CartItem cartItem : cart.getItems()) {
-			if (cartItem.getProduct().getId().equals(productId)) {
+			if (cartItem.getProductId().equals(productId)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	@Transactional
+	@Override
+	public void removeItemFromCart(Long userId, Long productId) {
+		Cart cart = fetchCart(userId);
+		Set<CartItem> cartItems = cart.getItems();
+		if (cartItems != null && cartItems.size() > 0) {
+			boolean exist = checkIfItemExist(cart, productId);
+			if (exist) {
+				removeItemFromCart(cart, productId);
+			} else {
+				throw new RuntimeException(AppMessage.PRODUCT_NOT_FOUND_IN_CART);
+			}
+		}
+		cartDao.save(cart);
+	}
+
+	private void removeItemFromCart(Cart cart, Long productId) {
+		Set<CartItem> remainingItems = new HashSet<CartItem>();
+		for (CartItem cartItem : cart.getItems()) {
+			if (!cartItem.getProductId().equals(productId)) {
+				remainingItems.add(cartItem);
+			}
+		}
+		cart.setItems(remainingItems);
+		calculateCartTotal(cart);
+	}
+
+	private Product getProduct(Long productId) {
+		CustomResponse productResponse = productClient.findById(productId);
+		if (productResponse.getSuccess()) {
+			Product product = CommonUtil.getObjectFromLinkedHashMap(Product.class, productResponse.getData());
+			if (product == null) {
+				throw new ResourceNotFoundException(AppMessage.PRODUCT_NOT_FOUND);
+			}
+			return product;
+		} else {
+			throw new RuntimeException(productResponse.getMessage());
+		}
+	}
+
+	private UserDetails getUser(Long userId) {
+		CustomResponse userResponse = userClient.findById(userId);
+
+		if (userResponse.getSuccess()) {
+			UserDetails user = CommonUtil.getObjectFromLinkedHashMap(UserDetails.class, userResponse.getData());
+
+			if (user == null) {
+				throw new ResourceNotFoundException(AppMessage.USER_NOT_FOUND);
+			}
+			return user;
+		} else {
+			throw new RuntimeException(userResponse.getMessage());
+		}
+	}
+
+	private Cart fetchCart(Long userId) {
+		Optional<Cart> dbCart = getCart(userId);
+
+		if (dbCart.isPresent()) {
+			return dbCart.get();
+		} else {
+			throw new ResourceNotFoundException(AppMessage.CART_NOT_FOUND);
+		}
+	}
+
+	private Cart getOrCreateCart(Long userId) {
+		Optional<Cart> dbCart = getCart(userId);
+
+		Cart cart = null;
+		if (dbCart.isPresent()) {
+			cart = dbCart.get();
+		} else {
+			cart = createCart(userId);
+		}
+
+		return cart;
+	}
+
+	private void calculateCartTotal(Cart cart) {
+
+		BigDecimal subtotal = new BigDecimal(0);
+		BigDecimal tax = new BigDecimal(0);
+		BigDecimal deliveryCharges = new BigDecimal(0);
+		BigDecimal discount = new BigDecimal(0);
+
+		for (CartItem cartItem : cart.getItems()) {
+
+			subtotal = subtotal.add(cartItem.getSubtotal());
+			tax = tax.add(cartItem.getTax());
+			deliveryCharges = deliveryCharges.add(cartItem.getDeliveryCharges());
+			discount = discount.add(cartItem.getDiscount());
+
+			cart.setSubtotal(subtotal);
+			cart.setTax(tax);
+			cart.setDeliveryCharges(deliveryCharges);
+			cart.setDiscount(discount);
+
+			cart.setTotal(subtotal.add(tax).add(deliveryCharges).subtract(discount));
+		}
+
 	}
 
 }
