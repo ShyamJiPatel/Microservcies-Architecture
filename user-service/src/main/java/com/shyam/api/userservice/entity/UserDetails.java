@@ -14,6 +14,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shyam.commonlib.entity.BaseEntity;
 
 import lombok.Data;
@@ -53,6 +54,7 @@ public class UserDetails extends BaseEntity {
 	@Column(name = "dob")
 	private String dob;
 
+	@JsonIgnore
 	@Column(name = "password")
 	private String password;
 
