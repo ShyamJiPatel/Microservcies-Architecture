@@ -43,10 +43,10 @@ public class Product extends BaseEntity {
 	private String description;
 
 	@Column(name = "price")
-	private BigDecimal price;
+	private BigDecimal price = new BigDecimal(0);
 
 	@Column(name = "quantity")
-	private Integer quantity;
+	private Integer quantity = 0;
 
 	@Column(name = "brand")
 	private String brand;
