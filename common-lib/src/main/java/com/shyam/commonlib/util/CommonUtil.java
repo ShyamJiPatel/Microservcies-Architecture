@@ -1,6 +1,8 @@
 package com.shyam.commonlib.util;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public abstract class CommonUtil {
 	public static boolean isEmpty(String obj) {
@@ -8,8 +10,10 @@ public abstract class CommonUtil {
 	}
 
 	public static <T> T getObjectFromLinkedHashMap(Class<T> outputType, Object input) {
-		ObjectMapper mapper = new ObjectMapper();
-		T output = mapper.convertValue(input, outputType);
+		ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				false);
+		objectMapper.registerModule(new JavaTimeModule());
+		T output = objectMapper.convertValue(input, outputType);
 		return output;
 	}
 }
